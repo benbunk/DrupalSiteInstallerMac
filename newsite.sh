@@ -27,11 +27,11 @@ echo Drush Site Install
 # mysql user - drupal7
 # mysql user password - password
 # mysql host - localhost
-drush site-install standard --account-name=admin --account-pass=password --account-mail=benbunk@gmail.com --db-url=mysql://drupal7:password@localhost:3306/$SITENAME --site-name=$SITENAME --yes
+drush site-install standard --account-name=admin --account-pass=password --account-mail=benbunk@example.com --db-url=mysql://drupal7:password@localhost:3306/$SITENAME --site-name=$SITENAME --yes
 
 echo Setup the apache config.
 mv ~/Sites/$SITENAME/.htaccess ~/Sites/$SITENAME/.htaccess.bak
-sed s@'# RewriteBase /'@"RewriteBase /~ben/$SITENAME"@ ~/Sites/$SITENAME/.htaccess.bak > ~/Sites/$SITENAME/.htaccess
+sed s@'# RewriteBase /'@"RewriteBase /~$USER/$SITENAME"@ ~/Sites/$SITENAME/.htaccess.bak > ~/Sites/$SITENAME/.htaccess
 
 echo Site Installed.
 echo Username: admin
