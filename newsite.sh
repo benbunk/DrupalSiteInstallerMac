@@ -8,15 +8,11 @@
 SITENAME=$1
 
 echo Creating Site: $SITENAME
-
 mkdir ~/Sites/$SITENAME
-
 cp -a ~/Sites/drupal-7.14/ ~/Sites/$SITENAME
 
-# Download the Drupal installation
-cd ~/Sites/$SITENAME/sites/default
-
 echo Setup the settings.
+cd ~/Sites/$SITENAME/sites/default
 cp default.settings.php settings.php
 chmod 777 settings.php
 
@@ -28,10 +24,8 @@ echo Drush Site Install
 # mysql user - drupal7
 # mysql user password - password
 # mysql host - localhost
-
 drush site-install standard --account-name=admin --account-pass=password --account-mail=benbunk@gmail.com --db-url=mysql://drupal7:password@localhost:3306/$SITENAME --site-name=$SITENAME --yes
 
-#todo
 echo Setup the apache config.
 mv ~/Sites/$SITENAME/.htaccess ~/Sites/$SITENAME/.htaccess.bak
 sed s@'# RewriteBase /'@"RewriteBase /~ben/$SITENAME"@ ~/Sites/$SITENAME/.htaccess.bak > ~/Sites/$SITENAME/.htaccess
