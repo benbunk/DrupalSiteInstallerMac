@@ -8,8 +8,6 @@
 # @todo - Change the repo checkout logic. Default to local and only checkout 
 #          from elsewhere if needed. When checking out from elsewhere checkout  
 #          directly to local cache and then clone from local as usual.
-# @todo - Fix all the relative pathing and directory changing so that we don't 
-#          need to run the script from inside the root of the ~/Sites directory.
 # @todo - For d8 the database must be created manually and you must use 127.0.0.1 instead of localhost.
 
 

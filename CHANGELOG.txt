@@ -1,0 +1,1 @@
+01/01/2013 - Added support for Drupal 8, Allow script to be run from any directory, Modified default install of Drupal 7.
