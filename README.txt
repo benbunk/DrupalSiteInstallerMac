@@ -8,7 +8,7 @@ QUICK:
   download Git, Drush, and MySQL and run this script and have a fully 
   functioning Drupal site in minutes.
 
-INSTALL: Place the newsite.sh file in your ~/Sites folder and make it executable.
+INSTALL: Download newsite.sh and make sure it's executable.
 
 USAGE:
   cd to ~/Sites
