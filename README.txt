@@ -15,7 +15,7 @@ USAGE:
   ./newsite [DRUPAL VERSION] [SITE NAME] [Repo to checkout]
     [DRUPAL VERSION] = 6 or 7
     [SITE NAME] = Used for database name, folder name, and url part (http://localhost/~username/sitename)
-    [Repo to checkout] = github, drupal.org, local
+    [Repo to checkout] = (OPTIONAL) github, drupal.org, local
       Local only works after you've used either github or drupal.org at least once.
 
   Example:
