@@ -12,11 +12,11 @@
 
 
 # CREATE DATABASE d8;
-# GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES ON `d8`.* TO 'drupal7'@'localhost';
+# GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES ON *.* TO 'drupal'@'localhost' IDENTIFIED BY 'password';
 # FLUSH PRIVILEGES;
 
 # Setup Static variables
-MYSQLUSER=drupal7
+MYSQLUSER=drupal
 MYSQLPASS=password
 MYSQLHOST=127.0.0.1
 
@@ -57,14 +57,14 @@ if [ -e ~/Sites/$SITENAME ]; then
   echo Setup the Drupal settings.
   cd ~/Sites/$SITENAME/sites/default
   cp default.settings.php settings.php
-  chmod 777 settings.php
+  chown _www:staff settings.php
 fi
 
 # Only create files if the git checkout worked.
 if [ -e ~/Sites/$SITENAME ]; then
   echo Setup the public files.
   mkdir files
-  chmod 777 files
+  chown _www:staff files
 fi
 
 echo Drush Site Install.
