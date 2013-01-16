@@ -11,7 +11,6 @@ QUICK:
 INSTALL: Download newsite.sh and make sure it's executable.
 
 USAGE:
-  cd to ~/Sites
   ./newsite [DRUPAL VERSION] [SITE NAME] [Repo to checkout]
     [DRUPAL VERSION] = 6 or 7
     [SITE NAME] = Used for database name, folder name, and url part (http://localhost/~username/sitename)
@@ -34,6 +33,6 @@ ASSUMPTIONS:
  - Drush must be installed and part of the PATH environment variable.
  - MySQL must be installed and part of the PATH environment variable.
  - MySQL 
-     Username: drupal7
+     Username: drupal
      Password: password
 

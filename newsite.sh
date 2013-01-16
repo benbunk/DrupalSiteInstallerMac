@@ -2,7 +2,7 @@
 
 # Requirements:
 #  1. Drush pre installed and part of the path
-#  2. Apache setup with user home directories
+#  2. Apache setup with vhosts
 #  3. Git installed and part of the path
 
 # @todo - Change the repo checkout logic. Default to local and only checkout 
@@ -35,7 +35,7 @@ fi
 
 # Default repo is github -- this is 10x faster then d.o
 REPOURL="git://github.com/drupal/drupal.git"
-# Check if the they manually selected d.o over github.
+# Check if they manually selected d.o over github.
 if [ "$REPO" = "drupal.org" ]; then
   REPOURL="http://git.drupal.org/project/drupal.git"
 fi
@@ -45,7 +45,7 @@ if [ "$REPO" = "local" ]; then
 fi
 
 echo Creating Site: $SITENAME from Repo: $REPOURL
-git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME
+git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.local
 
 # Check if the local repo for this version exists. If not create it for caching.
 if [ ! -e ~/Sites/drupal-$VERSION ]; then 
@@ -53,16 +53,17 @@ if [ ! -e ~/Sites/drupal-$VERSION ]; then
 fi
 
 # Only create the settings file if the site checked out.
-if [ -e ~/Sites/$SITENAME ]; then
+if [ -e ~/Sites/$SITENAME.local ]; then
   echo Setup the Drupal settings.
-  cd ~/Sites/$SITENAME/sites/default
+  cd ~/Sites/$SITENAME.local/sites/default
   cp default.settings.php settings.php
   chown _www:staff settings.php
 fi
 
 # Only create files if the git checkout worked.
-if [ -e ~/Sites/$SITENAME ]; then
+if [ -e ~/Sites/$SITENAME.local ]; then
   echo Setup the public files.
+  # Assumes we completed the cd command into the sites/default directory.
   mkdir files
   chown _www:staff files
 fi
@@ -80,10 +81,33 @@ else
 fi
 
 echo Setup the apache config.
-mv ~/Sites/$SITENAME/.htaccess ~/Sites/$SITENAME/.htaccess.bak
-sed s@'# RewriteBase /'@"RewriteBase /~$USER/$SITENAME"@ ~/Sites/$SITENAME/.htaccess.bak > ~/Sites/$SITENAME/.htaccess
+echo "
+# $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPO 
+<VirtualHost *:80>
+    ServerAdmin webmaster@$SITENAME.local
+    DocumentRoot '/Users/ben/Sites/$SITENAME.local'
+    ServerName $SITENAME.local
+    ServerAlias www.$SITENAME.local
+    ErrorLog '/private/var/log/apache2/$SITENAME-error_log'
+    CustomLog '/private/var/log/apache2/$SITENAME-access_log' common
+
+    <Directory /Users/ben/Sites/$SITENAME.local>
+      AllowOverride All
+    </Directory>
+</VirtualHost>
+
+" >> ~/Documents/install/httpd/extra/httpd-vhosts.conf
+
+echo Setup the hosts file.
+echo "
+# $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPOURL
+127.0.0.1 $SITENAME.local www.$SITENAME.local
+
+" >> ~/Documents/install/hosts
+
+sudo apachectl restart
 
 echo Site Installed.
 echo Username: admin
 echo Password: password
-echo Site URL: http://localhost/~$USER/$SITENAME
+echo Site URL: http://$SITENAME.local/
