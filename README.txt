@@ -1,39 +1,15 @@
-DESCRIPTIONS:
-  This is a very simple script to download the latest copy of Drupal and 
-  install and configure it for first time use. There are many assumptions made 
-  about the configuration of the Mac and I will try my best to list them below.
+This program will assist in the setup of a Drupal 6, 7, or 8 site on your Mac using stock configurations of Apache, MySQL, and PHP.
 
-QUICK:
-  The short version of all this is that if you have an unmodified Mac you can 
-  download Git, Drush, and MySQL and run this script and have a fully 
-  functioning Drupal site in minutes.
+There are two types of configurations supported:
 
-INSTALL: Download newsite.sh and make sure it's executable.
+1. VHOSTS - Checkout the vhosts branch above.
+  Provides a unique apache configuration for each site.
+  Creates an entry in /etc/hosts
+  Requires a special setup of the /etc/hosts and /etc/apache2/extras/httpd-vhosts.conf file.
+  Requires an apache restart for each new site.
+  Requires root privileges to install.
 
-USAGE:
-  cd to ~/Sites
-  ./newsite [DRUPAL VERSION] [SITE NAME] [Repo to checkout]
-    [DRUPAL VERSION] = 6 or 7
-    [SITE NAME] = Used for database name, folder name, and url part (http://localhost/~username/sitename)
-    [Repo to checkout] = (OPTIONAL) github, drupal.org, local
-      Local only works after you've used either github or drupal.org at least once.
-
-  Example:
-  ./newsite 6 test_site github
-  ./newsite 7 test_site7 drupal.org
-  ./newsite 6 localinstall local
-  ./newsite 7 local7install local
-
-ASSUMPTIONS: 
- - Stock OSX Apache installation and configuration
- - Stock OSX PHP installation configuration
- - Apache is configured to allow user directories in the form of 
-     http://localhost/~USERNAME/ which is located in ~/Sites
- - Apache is configured to allow .htaccess files to override existing configs.
- - Git must be installed and part of the PATH environment variable.
- - Drush must be installed and part of the PATH environment variable.
- - MySQL must be installed and part of the PATH environment variable.
- - MySQL 
-     Username: drupal7
-     Password: password
-
+2. User Sites - Checkout the user-sites branch above.
+  Much easier setup.
+  Requires modifying the htaccess file in the drupal directory.
+  Simple to get started.
