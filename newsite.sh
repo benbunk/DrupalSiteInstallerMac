@@ -10,7 +10,6 @@
 #          directly to local cache and then clone from local as usual.
 # @todo - For d8 the database must be created manually and you must use 127.0.0.1 instead of localhost.
 
-
 # CREATE DATABASE d8;
 # GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES ON *.* TO 'drupal'@'localhost' IDENTIFIED BY 'password';
 # FLUSH PRIVILEGES;
@@ -25,6 +24,29 @@ VERSION=$1
 SITENAME=$2
 REPO=$3
 PROFILE=$4
+
+# Help Text.
+if [ "$VERSION" = "help" ]; then
+ echo "
+Usage: newsite [version] [sitename] [repo] [profile]"
+ echo "
+Example: newsite 7 testSiteName github standard"
+ echo "
+Variables:
+    version  - 6, 7 or 8
+    sitename - Will be added to hosts file as [sitename].local
+    repo     - github, local or drupal.org
+    profile  - minimal, standard or anything custom you add to a local copy."
+ echo "
+Default Variables:
+    DB User     - drupal
+    DB Pass     - password
+    DB Host     - 127.0.0.1
+
+    Drupal User - admin
+    Drupal Pass - password"
+ exit
+fi
 
 # Create blank DB if option one is DB and option two is a DB name.
 
@@ -105,6 +127,7 @@ echo "
 
 " >> ~/Documents/install/hosts
 
+echo Restarting Apache
 sudo apachectl restart
 
 echo Site Installed.
