@@ -26,7 +26,7 @@ REPO=$3
 PROFILE=$4
 
 # Help Text.
-if [ "$VERSION" = "help" ]; then
+if [ "$VERSION" = "help" -o -z "$VERSION" ]; then
  echo "
 Usage: newsite [version] [sitename] [repo] [profile]"
  echo "
@@ -34,7 +34,7 @@ Example: newsite 7 testSiteName github standard"
  echo "
 Variables:
     version  - 6, 7 or 8
-    sitename - Will be added to hosts file as [sitename].local
+    sitename - Will be added to hosts file as [sitename].localhost
     repo     - github, local or drupal.org
     profile  - minimal, standard or anything custom you add to a local copy."
  echo "
@@ -44,7 +44,8 @@ Default Variables:
     DB Host     - 127.0.0.1
 
     Drupal User - admin
-    Drupal Pass - password"
+    Drupal Pass - password
+"
  exit
 fi
 
@@ -67,7 +68,7 @@ if [ "$REPO" = "local" ]; then
 fi
 
 echo Creating Site: $SITENAME from Repo: $REPOURL
-git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.local
+git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.localhost
 
 # Check if the local repo for this version exists. If not create it for caching.
 if [ ! -e ~/Sites/drupal-$VERSION ]; then 
@@ -75,15 +76,15 @@ if [ ! -e ~/Sites/drupal-$VERSION ]; then
 fi
 
 # Only create the settings file if the site checked out.
-if [ -e ~/Sites/$SITENAME.local ]; then
+if [ -e ~/Sites/$SITENAME.localhost ]; then
   echo Setup the Drupal settings.
-  cd ~/Sites/$SITENAME.local/sites/default
+  cd ~/Sites/$SITENAME.localhost/sites/default
   cp default.settings.php settings.php
   chown _www:staff settings.php
 fi
 
 # Only create files if the git checkout worked.
-if [ -e ~/Sites/$SITENAME.local ]; then
+if [ -e ~/Sites/$SITENAME.localhost ]; then
   echo Setup the public files.
   # Assumes we completed the cd command into the sites/default directory.
   mkdir files
@@ -106,14 +107,14 @@ echo Setup the apache config.
 echo "
 # $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPO 
 <VirtualHost *:80>
-    ServerAdmin webmaster@$SITENAME.local
-    DocumentRoot '/Users/ben/Sites/$SITENAME.local'
-    ServerName $SITENAME.local
-    ServerAlias www.$SITENAME.local
+    ServerAdmin webmaster@$SITENAME.localhost
+    DocumentRoot '/Users/ben/Sites/$SITENAME.localhost'
+    ServerName $SITENAME.localhost
+    ServerAlias www.$SITENAME.localhost
     ErrorLog '/private/var/log/apache2/$SITENAME-error_log'
     CustomLog '/private/var/log/apache2/$SITENAME-access_log' common
 
-    <Directory /Users/ben/Sites/$SITENAME.local>
+    <Directory /Users/ben/Sites/$SITENAME.localhost>
       AllowOverride All
     </Directory>
 </VirtualHost>
@@ -123,7 +124,8 @@ echo "
 echo Setup the hosts file.
 echo "
 # $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPOURL
-127.0.0.1 $SITENAME.local www.$SITENAME.local
+127.0.0.1 $SITENAME.localhost www.$SITENAME.localhost $SITENAME.dev.stupil.com
+
 
 " >> ~/Documents/install/hosts
 
