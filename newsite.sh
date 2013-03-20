@@ -9,6 +9,12 @@
 #          from elsewhere if needed. When checking out from elsewhere checkout  
 #          directly to local cache and then clone from local as usual.
 # @todo - For d8 the database must be created manually and you must use 127.0.0.1 instead of localhost.
+# @todo - Uninstall
+#         Bens-MacBook-Pro:Sites ben$ sudo rm -rf connector.localhost/
+#         Bens-MacBook-Pro:Sites ben$ sudo vim /etc/hosts
+#         Bens-MacBook-Pro:Sites ben$ sudo vim /etc/apache2/extra/httpd-vhosts.conf 
+#         Bens-MacBook-Pro:Sites ben$ sudo mysql
+
 
 # CREATE DATABASE d8;
 # GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES ON *.* TO 'drupal'@'localhost' IDENTIFIED BY 'password';
@@ -49,7 +55,7 @@ Default Variables:
  exit
 fi
 
-# Create blank DB if option one is DB and option two is a DB name.
+# @todo Create blank DB if option one is DB and option two is a DB name.
 
 # Default Profile value
 if [ -z "$PROFILE" ]; then
@@ -72,7 +78,7 @@ git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.localhost
 
 # Check if the local repo for this version exists. If not create it for caching.
 if [ ! -e ~/Sites/drupal-$VERSION ]; then 
-  git clone $SITENAME ~/Sites/drupal-$VERSION
+  git clone ~/Sites/$SITENAME.localhost ~/Sites/drupal-$VERSION
 fi
 
 # Only create the settings file if the site checked out.
@@ -80,7 +86,6 @@ if [ -e ~/Sites/$SITENAME.localhost ]; then
   echo Setup the Drupal settings.
   cd ~/Sites/$SITENAME.localhost/sites/default
   cp default.settings.php settings.php
-  chown _www:staff settings.php
 fi
 
 # Only create files if the git checkout worked.
@@ -88,7 +93,6 @@ if [ -e ~/Sites/$SITENAME.localhost ]; then
   echo Setup the public files.
   # Assumes we completed the cd command into the sites/default directory.
   mkdir files
-  chown _www:staff files
 fi
 
 echo Drush Site Install.
@@ -102,6 +106,10 @@ else
   #         browser.
   drush site-install default --account-name=admin --account-pass=password --account-mail=benbunk@example.com --db-url=mysqli://$MYSQLUSER:$MYSQLPASS@$MYSQLHOST:3306/$SITENAME --site-name=$SITENAME --yes
 fi
+
+# Change the perms of the files directory.
+sudo chown _www:staff files
+sudo chown _www:staff settings.php
 
 echo Setup the apache config.
 echo "
@@ -135,4 +143,4 @@ sudo apachectl restart
 echo Site Installed.
 echo Username: admin
 echo Password: password
-echo Site URL: http://$SITENAME.local/
+echo Site URL: http://$SITENAME.localhost/
