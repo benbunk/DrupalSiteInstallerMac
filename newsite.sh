@@ -42,6 +42,8 @@ Variables:
     version  - 6, 7 or 8
     sitename - Will be added to hosts file as [sitename].localhost
     repo     - github, local or drupal.org
+             - Local must be a git repo at ~/Sites/drupal-{VERSION}
+             - Local must also have a branch {VERSION}.x
     profile  - minimal, standard or anything custom you add to a local copy."
  echo "
 Default Variables:
@@ -74,7 +76,7 @@ if [ "$REPO" = "local" ]; then
 fi
 
 echo Creating Site: $SITENAME from Repo: $REPOURL
-git clone --recursive --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.localhost
+git clone --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.localhost
 
 # Check if the local repo for this version exists. If not create it for caching.
 if [ ! -e ~/Sites/drupal-$VERSION ]; then 
