@@ -76,7 +76,7 @@ if [ "$REPO" = "local" ]; then
 fi
 
 echo Creating Site: $SITENAME from Repo: $REPOURL
-git clone --branch $VERSION.x $REPOURL ~/Sites/$SITENAME.localhost
+git clone --branch $VERSION $REPOURL ~/Sites/$SITENAME.localhost
 
 # Check if the local repo for this version exists. If not create it for caching.
 if [ ! -e ~/Sites/drupal-$VERSION ]; then 
@@ -98,7 +98,7 @@ if [ -e ~/Sites/$SITENAME.localhost ]; then
 fi
 
 echo Drush Site Install.
-if [ "$VERSION" = "7" ]; then
+if [[ "$VERSION" == 7* ]]; then
   drush site-install $PROFILE --account-name=admin --account-pass=password --account-mail=benbunk@example.com --db-url=mysql://$MYSQLUSER:$MYSQLPASS@$MYSQLHOST:3306/$SITENAME --site-name=$SITENAME --yes
 elif [ "$VERSION" = "8" ]; then
   drush site-install $PROFILE --account-name=admin --account-pass=password --account-mail=benbunk@example.com --db-url=mysql://$MYSQLUSER:$MYSQLPASS@$MYSQLHOST:3306/$SITENAME --site-name=$SITENAME --yes
@@ -114,8 +114,8 @@ sudo chown _www:staff files
 sudo chown _www:staff settings.php
 
 echo Setup the apache config.
-echo "
-# $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPO 
+sudo echo "
+# $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPO
 <VirtualHost *:80>
     ServerAdmin webmaster@$SITENAME.localhost
     DocumentRoot '/Users/ben/Sites/$SITENAME.localhost'
@@ -128,16 +128,13 @@ echo "
       AllowOverride All
     </Directory>
 </VirtualHost>
-
-" >> ~/Documents/install/httpd/extra/httpd-vhosts.conf
+" >> /etc/apache2/extra/httpd-vhosts.conf
 
 echo Setup the hosts file.
-echo "
+sudo echo "
 # $SITENAME - Drupal-$VERSION - Profile $PROFILE - Repo $REPOURL
 127.0.0.1 $SITENAME.localhost www.$SITENAME.localhost $SITENAME.dev.stupil.com
-
-
-" >> ~/Documents/install/hosts
+" >> /etc/hosts
 
 echo Restarting Apache
 sudo apachectl restart
@@ -146,3 +143,4 @@ echo Site Installed.
 echo Username: admin
 echo Password: password
 echo Site URL: http://$SITENAME.localhost/
+echo 
